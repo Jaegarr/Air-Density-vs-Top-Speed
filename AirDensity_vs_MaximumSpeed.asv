@@ -18,35 +18,36 @@ AFR     = 14.7;           % Stoichiometric AFR
 LHV     = 44e6;          % Lower heating value of fuel [J/kg]
 n_combustion= 0.50; % Combustion efficiency (assumed), this number is thrown around a lot so why not?
 n_MGUK = 0.88;          % This efficiency value is taken from the efficiency map I have used in my SAE publication for 12500 RPM
-inlet_d= 345e-4 % Inlet valve diameter, 2026 Regulations C5.4.13, Couldn't find information for 2025 cars so assumed safe
+inlet_d= 345e-4; % Inlet valve diameter, 2026 Regulations C5.4.13, Couldn't find information for 2025 cars so assumed safe
 % MGU-K
 P_MGUK_2025 = 120e3;    % MGU-K power limit 2025 [W]
 P_MGUK_2026 = 350e3;    % MGU-K power limit 2026 [W]
 % Vehicle Characteristics 
 Cd     = 0.78; % Drag coefficient
-Af = 1.5         % frontal area [m^2]
+Af = 1.5;         % frontal area [m^2]
 Cr = 0.01;    % Rolling resistance coefficient, this value is taken from my SAE publication
-mass = 795;  % 2026 Vehicle mass including driver [kg], Article 4.1 and 4.6.2 
+mass = 764;  % 2026 Vehicle mass including driver [kg], Article 4.1 and 4.6.2 
 
-%% 3) Preallocate results
+%% Preallocate results
 n = height(tbl);
-rho              = zeros(n,1);
-mdot_air         = zeros(n,1);
-mdot_fuel        = zeros(n,1);
-P_ICE            = zeros(n,1);
-P_tot_2025       = zeros(n,1);
-P_tot_2026       = zeros(n,1);
-v_max_2025       = zeros(n,1);
-v_max_2026       = zeros(n,1);
+rho = zeros(n,1);
+mdot_air = zeros(n,1);
+mdot_fuel = zeros(n,1);
+P_ICE = zeros(n,1);
+P_tot_2025 = zeros(n,1);
+P_tot_2026 = zeros(n,1);
+v_max_2025 = zeros(n,1);
+v_max_2026 = zeros(n,1);
+v_max_2026_e = zeros(n,1);
 
-%% 4) Loop through each track and compute
+%% 
 for i = 1:n
     % Ambient conditions
     T_K = tbl.AvgTemp(i) + 273.15;
     p_track = p0 * exp(-tbl.Elevation(i) / H_scale);
     rho(i) = p_track / (R * T_K);
     % Air mass flow [kg/s]
-    mdot_air(i) = rho(i) * Vd * RPM_max/60 * VE;  % RPM→rev/s division
+    mdot_air(i) = rho(i)*pi/4*inlet_d^2*(gamma*R*T_K)^0.5;  % Maximum flow condition at Mach 1
     % Fuel mass flow [kg/s]
     mdot_fuel(i) = mdot_air(i) / AFR;
     % ICE power [W]
@@ -68,12 +69,15 @@ tbl.Power_total2025_kW = P_tot_2025/1e3;
 tbl.Power_total2026_kW = P_tot_2026/1e3;
 tbl.Vmax2025_kph = v_max_2025 * 3.6;
 tbl.Vmax2026_kph = v_max_2026 * 3.6;
-disp(tbl);
+trackNames = categorical(tbl.Track);
+trackNames = reordercats(trackNames, tbl.Track);  % preserve original order
 subplot(2,1,1);
-plot(tbl.Power_total2025_kW)
+plot(trackNames, tbl.Power_total2025_kW)
 hold on
-plot(tbl.Power_total2026_kW)
+plot(trackNames, tbl.Power_total2026_kW)
+ylabel('Power [kW]')
 subplot(2,1,2);
-plot(tbl.Vmax2025_kph)
+plot(trackNames, tbl.Vmax2025_kph)
 hold on
-plot(tbl.Vmax2026_kph)
+plot(trackNames, tbl.Vmax2026_kph)
+ylabel('Top Speed [kph]')
