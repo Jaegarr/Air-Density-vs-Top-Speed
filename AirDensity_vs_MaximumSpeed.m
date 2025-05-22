@@ -75,6 +75,8 @@ data.Vmax2026_kph = v_max_2026 * 3.6;
 trackNames = categorical(data.Track);
 trackNames = reordercats(trackNames, data.Track);  % preserve original order
 subplot(2,1,1);
+plot(trackNames, data.Power_ICE_kW)
+hold on
 plot(trackNames, data.Power_total2025_kW)
 legend('2025')
 hold on
