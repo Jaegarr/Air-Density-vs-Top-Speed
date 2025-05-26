@@ -72,7 +72,7 @@ data.Power_total2026_kW = P_tot_2026/1e3;
 data.Vmax2025_kph = v_max_2025 * 3.6;
 data.Vmax2026_kph = v_max_2026 * 3.6;
 %% Validation
-%Vmax2024 = xxx
+%Vmax2024 = [0;0;0;0;0;0;0;0;0;0,;0;0;0;357.2;0;0;0;0;0;0;0;0;0;0]
 %% Plots
 trackNames = categorical(data.Track);
 trackNames = reordercats(trackNames, data.Track);  % preserve original order
