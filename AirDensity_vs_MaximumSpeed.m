@@ -1,5 +1,7 @@
 %% Track Data
-Track = {'Bahrain'; 'Jeddah'; 'Melbourne'; 'Suzuka'; 'Shanghai';'Miami'; 'Imola'; 'Monaco'; 'Montreal'; 'Barcelona';'Spielberg'; 'Silverstone'; 'Budapest'; 'Spa'; 'Zandvoort';'Monza'; 'Baku'; 'Singapore'; 'Austin'; 'Mexico City';'São Paulo'; 'Las Vegas'; 'Lusail'; 'Yas Marina'};
+Track = {'Bahrain'; 'Jeddah'; 'Melbourne'; 'Suzuka'; 'Shanghai';'Miami'; 'Imola'; 'Monaco'; ...
+    'Montreal'; 'Barcelona';'Spielberg'; 'Silverstone'; 'Budapest'; 'Spa'; 'Zandvoort';'Monza'; ... 
+    'Baku'; 'Singapore'; 'Austin'; 'Mexico City';'São Paulo'; 'Las Vegas'; 'Lusail'; 'Yas Marina'};
 Elevation = [7; 3; 31; 35; 3; 3; 35; 10; 10; 58; 660; 170; 100; 368; 5; 162; -28; 15; 225; 2240; 784; 630; 5; 5]; %In meters
 AvgTemp  = [30; 32; 18; 25; 22; 29; 20; 28; 22; 26; 20; 17; 30; 18; 17; 24; 35; 30; 28; 16; 22; 35; 42; 32]; % In degree Celcius
 data = table(Track, Elevation, AvgTemp);
@@ -7,9 +9,9 @@ data = table(Track, Elevation, AvgTemp);
 %Universal constants
 p0 = 101325; % Sea-level standard pressure [Pa]
 H_scale = 8434;  % Scale height [m] for barometric formula
-g = 9.81;      % Gravity [m/s^2]
-R = 287;       % Specific gas constant for air [J/(kg·K)]
-gamma = 1.4;     % Heat capacity ratio
+g = 9.81; % Gravity [m/s^2]
+R = 287; % Specific gas constant for air [J/(kg·K)]
+gamma = 1.4; % Heat capacity ratio
 % Engine parameters
 Vd = 0.0016;        % Displacement volume [m^3], Article xxx
 RPM_max = 12500;    % Maximum engine speed [RPM], used the rev limiter value from Article xxx
@@ -20,8 +22,8 @@ n_combustion = 0.50; % Combustion efficiency (assumed), this number is thrown ar
 n_MGUK = 0.88;          % This efficiency value is taken from the efficiency map I have used in my SAE publication for 12500 RPM
 inlet_d= 345e-4; % Inlet valve diameter, 2026 Regulations C5.4.13, Couldn't find information for 2025 cars so assumed safe
 % MGU-K
-P_MGUK_2025 = 120e3;    % MGU-K power limit 2025 [W]
-P_MGUK_2026 = 350e3;    % MGU-K power limit 2026 [W]
+P_MGUK_2025 = 120e3; % MGU-K power limit 2025 [W]
+P_MGUK_2026 = 350e3; % MGU-K power limit 2026 [W]
 % Vehicle Characteristics 
 Cd     = 0.78; % Drag coefficient
 Af = 1.5;         % frontal area [m^2]
