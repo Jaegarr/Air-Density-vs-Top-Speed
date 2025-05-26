@@ -93,9 +93,10 @@ p3 = plot(trackNames, data.Power_total2026_e_kW);
 legend([p1 p2 p3 ],{'2025', '2026', '2026 Ethanol'},'Location', 'southwest');
 ylabel('Power [kW]')
 subplot(2,1,2);
-hold on
-v1 = plot(trackNames, data.Vmax2025_kph);
-v2 = plot(trackNames, data.Vmax2026_kph);
-v3 = plot(trackNames, data.Vmax2026_e_kph);
-legend([v1 v2 v3 ],{'2025', '2026', '2026 Ethanol'},'Location', 'southwest');
+plot(trackNames, data.Vmax2025_kph)
+legend('2025')
+plot(trackNames, data.Vmax2026_kph)
+legend('2026')
+plot(trackNames, data.Vmax2026_kph)
+legend('2026 Ethanol')
 ylabel('Top Speed [kph]')
