@@ -10,11 +10,11 @@ data = table(tracks, elevation_m, avgTemp_C, 'VariableNames', ...
     {'Track','Elevation_m','AvgTemp_C'});
 %% Properties
 % Universal constants (SI)
-p0_Pa       = 101325;           % Sea-level pressure
-Hscale_m    = 8434;             % Scale height
-g_m_s2      = 9.81;             % Gravity
-R_J_kgK     = 287;              % Gas constant
-gamma       = 1.4;              % Heat capacity ratio
+p0_Pa       = 101325; % Sea-level pressure
+Hscale_m    = 8434;   % Scale height
+g_m_s2      = 9.81;    % Gravity
+R_J_kgK     = 287;     % Gas constant
+gamma       = 1.4;     % Heat capacity ratio
 % Power-unit parameters
 Vd_m3       = 0.0016;
 RPM_max     = 12500;
@@ -53,11 +53,9 @@ P_tot26e= P_ICE26e + P_MGUK26_W .* eta_MGUK;
 solveVmax = @(Ptot,mass) arrayfun(@(rho_i,P_i) ...
     fzero(@(v) dragRR(v,rho_i,Cd,Af_m2,Cr,mass,g_m_s2) - P_i, 100), ...
     rho, Ptot);
-
 v25 = solveVmax(P_tot25, mass25_kg);
 v26 = solveVmax(P_tot26, mass26_kg);
 v26e= solveVmax(P_tot26e,mass26_kg);
-
 %% Results
 data.Rho = rho;
 data.MdotAir = mdot_air;
@@ -72,12 +70,16 @@ data.Vmax26e_kph= v26e*3.6;
 figure;
 tl = tiledlayout(2,1,'Padding','compact','TileSpacing','compact');
 nexttile;
-plot(categorical(data.Track), data.Power25_kW, 'DisplayName','2025'); hold on;
-plot(categorical(data.Track), data.Power26_kW, 'DisplayName','2026');
-plot(categorical(data.Track), data.Power26e_kW,'DisplayName','2026 Eth');
+trackCat = categorical(data.Track);
+trackCat = reordercats(trackCat, data.Track);  % preserve original order
+plot(trackCat, data.Power25_kW, 'DisplayName','2025'); 
+hold on
+plot(trackCat, data.Power26_kW, 'DisplayName','2026');
+plot(trackCat, data.Power26e_kW,'DisplayName','2026 Ethanol');
 ylabel('Total Power [kW]'); legend('Location','southwest');
 nexttile;
-plot(categorical(data.Track), data.Vmax25_kph, 'DisplayName','2025'); hold on;
-plot(categorical(data.Track), data.Vmax26_kph, 'DisplayName','2026');
-plot(categorical(data.Track), data.Vmax26e_kph,'DisplayName','2026 Eth');
+plot(trackCat, data.Vmax25_kph, 'DisplayName','2025'); 
+hold on
+plot(trackCat, data.Vmax26_kph, 'DisplayName','2026');
+plot(trackCat, data.Vmax26e_kph,'DisplayName','2026 Ethanol');
 ylabel('Top Speed [kph]'); xtickangle(45); legend('Location','southwest');
