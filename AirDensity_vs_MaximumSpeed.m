@@ -49,7 +49,7 @@ P_ICE26e= mdot_fuel .* LHV_e_J_kg .* eta_comb;
 P_tot25 = P_ICE25 + P_MGUK25_W .* eta_MGUK;
 P_tot26 = P_ICE26 + P_MGUK26_W .* eta_MGUK;
 P_tot26e= P_ICE26e + P_MGUK26_W .* eta_MGUK;
-%% Top-speed solver (vectorized via arrayfun)
+%% Top-speed solver
 solveVmax = @(Ptot,mass) arrayfun(@(rho_i,P_i) ...
     fzero(@(v) dragRR(v,rho_i,Cd,Af_m2,Cr,mass,g_m_s2) - P_i, 100), ...
     rho, Ptot);
