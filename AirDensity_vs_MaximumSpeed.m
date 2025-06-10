@@ -83,3 +83,5 @@ hold on
 plot(trackCat, data.Vmax26_kph, 'DisplayName','2026');
 plot(trackCat, data.Vmax26e_kph,'DisplayName','2026 Ethanol');
 ylabel('Top Speed [kph]'); xtickangle(45); legend('Location','southwest');
+figure;
+plot(trackCat,data.Rho);ylabel('Air Density[kg/m3]');
