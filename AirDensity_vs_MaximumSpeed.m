@@ -67,11 +67,13 @@ data.Vmax25_kph = v25*3.6;
 data.Vmax26_kph = v26*3.6;
 data.Vmax26e_kph= v26e*3.6;
 % Plotting
-figure;
-tl = tiledlayout(2,1,'Padding','compact','TileSpacing','compact');
-nexttile;
 trackCat = categorical(data.Track);
 trackCat = reordercats(trackCat, data.Track);  % preserve original order
+figure;
+tl = tiledlayout(2,2,'Padding','compact','TileSpacing','compact');
+nexttile;
+plot(trackCat,data.Rho);ylabel('Air Density[kg/m3]');
+nexttile;
 plot(trackCat, data.Power25_kW, 'DisplayName','2025'); 
 hold on
 plot(trackCat, data.Power26_kW, 'DisplayName','2026');
@@ -82,6 +84,5 @@ plot(trackCat, data.Vmax25_kph, 'DisplayName','2025');
 hold on
 plot(trackCat, data.Vmax26_kph, 'DisplayName','2026');
 plot(trackCat, data.Vmax26e_kph,'DisplayName','2026 Ethanol');
-ylabel('Top Speed [kph]'); xtickangle(45); legend('Location','southwest');
-figure;
-plot(trackCat,data.Rho);ylabel('Air Density[kg/m3]');
+ylabel('Top Speed [kph]'); legend('Location','southwest');
+
