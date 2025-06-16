@@ -18,9 +18,10 @@ gamma       = 1.4;     % Heat capacity ratio
 % Power-unit parameters
 Vd_m3       = 0.0016;
 RPM_max     = 12500;
-AFR         = 14.7;
+AFR_g         = 14.7;
+AFR_e         = 9;
 LHV_g_J_kg  = 44e6;
-LHV_e_J_kg  = 39e6;
+LHV_e_J_kg  = 26.8e6;
 eta_comb    = 0.50;
 eta_MGUK    = 0.88;
 inlet_d_m   = 345e-4;
@@ -41,11 +42,12 @@ T_K = data.AvgTemp_C + 273.15;
 p_Pa = p0_Pa .* exp(-data.Elevation_m ./ Hscale_m);
 rho = p_Pa ./ (R_J_kgK .* T_K);
 mdot_air = rho .* (pi/4*inlet_d_m^2) .* sqrt(gamma * R_J_kgK .* T_K);
-mdot_fuel = mdot_air ./ AFR;
+mdot_fuel = mdot_air ./ AFR_g;
+mdot_fuel_e = mdot_air./AFR_e;
 %% Power calculations
 P_ICE25 = mdot_fuel .* LHV_g_J_kg .* eta_comb;
 P_ICE26 = mdot_fuel .* LHV_g_J_kg .* eta_comb;
-P_ICE26e= mdot_fuel .* LHV_e_J_kg .* eta_comb;
+P_ICE26e= mdot_fuel_e .* LHV_e_J_kg .* eta_comb;
 P_tot25 = P_ICE25 + P_MGUK25_W .* eta_MGUK;
 P_tot26 = P_ICE26 + P_MGUK26_W .* eta_MGUK;
 P_tot26e= P_ICE26e + P_MGUK26_W .* eta_MGUK;
