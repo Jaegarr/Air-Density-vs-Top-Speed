@@ -69,8 +69,7 @@ data.Vmax25_kph = v25*3.6;
 data.Vmax26_kph = v26*3.6;
 data.Vmax26e_kph= v26e*3.6;
 % Plotting
-%Top speed data: Las Vegas: 356.4, Monza: 353.5, Mexico City: 370, Miami:
-%343.5, Austin: 329.4, Jeddah: 341, Spa: 357.2
+%Top speed data: Las Vegas
 trackCat = categorical(data.Track);
 trackCat = reordercats(trackCat, data.Track);  % preserve original order
 figure;
