@@ -86,9 +86,9 @@ for i = 1:n_real
 end
 comparison = table(realTrackNames, realVmax, matchedVcalc, accuracy, ...
     'VariableNames', {'Track', 'ObservedVmax_kph', 'CalculatedVmax_kph', 'Accuracy'});
-% Overall Accuracy
+% Accuracy
 overallAccuracy = mean(accuracy, 'omitnan');
-% Plot with ±10% tolerance bands
+%  Plot with ±10% tolerance bands
 figure;
 hold on
 x = categorical(realTrackNames);
@@ -100,11 +100,20 @@ upper =  matchedVcalc * 1.1;
 lower =  matchedVcalc* 0.9;
 plot(x, upper, 'k--');
 plot(x, lower, 'k--');
-annotationText = sprintf('Overall Accuracy: %.2f%%', overallAccuracy*100);
-ylabel('Top Speed [km/h]');
-title('Comparison of Observed vs. Calculated Top Speeds (±10% Band)');
-legend('Location', 'best');
-grid on;
+ylabel('Top Speed [km/h]')
+legend('2024 Observed', 'Calculated', '+10% Band', '-10% Band', 'Location', 'best');
+title('Top Speed Comparison with ±10% Tolerance')
+grid on
+% Add annotation using numeric x-position
+annotationText = sprintf('Overall Accuracy: %.2f%%', overallAccuracy * 100);
+yl = ylim;
+
+% Position the text in the middle-bottom of the plot
+text((n_real+1)/2, yl(1) + 0.05*(yl(2)-yl(1)), annotationText, ...
+     'HorizontalAlignment', 'center', ...
+     'FontSize', 12, ...
+     'FontWeight', 'bold', ...
+     'Color', 'black');
 %% Analysis
 trackCat = categorical(data.Track);
 trackCat = reordercats(trackCat, data.Track);  % preserve original order
