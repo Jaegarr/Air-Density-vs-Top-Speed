@@ -68,32 +68,27 @@ data.Power26e_kW= P_tot26e/1e3;
 data.Vmax25_kph = v25*3.6;
 data.Vmax26_kph = v26*3.6;
 data.Vmax26e_kph= v26e*3.6;
-%Validation
-% Top speed data from 2024 season (fill in what you have)
-%Top speed data: Las Vegas: 356.4, Monza: 353.5, Mexico City: 370, Miami:
-%343.5, , Singapore: 314.8
-realTrackNames = {'Spa'; 'Monza'; 'Las Vegas'; 'Jeddah'; 'Austin','Miami'};
-realVmax = [357.2; 353.5; 356.4; 341; 329.4;343.5]; % [km/h]
-% Step 1: Initialize result arrays
+%% Validation
+realTrackNames = {'Spa'; 'Monza'; 'Las Vegas'; 'Jeddah'; 'Austin';'Miami';'Mexico City';'Singapore'}; % Top speed data from 2024 season
+realVmax = [357.2; 353.5; 356.4; 341; 329.4;343.5;370;314.8]; % [km/h]
 n_real = numel(realTrackNames);
 matchedVcalc = zeros(n_real, 1);
 accuracy = zeros(n_real, 1);
-
-% Step 2: Loop and find matches in your dataset
 for i = 1:n_real
     idx = find(strcmp(data.Track, realTrackNames{i}));
     if ~isempty(idx)
-        matchedVcalc(i) = data.Vmax2025_kph(idx); % or use Vmax2026_kph, etc.
+        matchedVcalc(i) = data.Vmax25_kph(idx);
         accuracy(i) = 1 - abs((matchedVcalc(i) - realVmax(i)) / realVmax(i));
     else
         matchedVcalc(i) = NaN;
         accuracy(i) = NaN;
     end
 end
-% Step 3: Build results table
 comparison = table(realTrackNames, realVmax, matchedVcalc, accuracy, ...
-    'VariableNames', {'Track', 'ObservedVmax_kph', 'CalculatedVmax_kph', 'Accuracy'})
-% Step 4 (optional): Plot with ±10% tolerance bands
+    'VariableNames', {'Track', 'ObservedVmax_kph', 'CalculatedVmax_kph', 'Accuracy'});
+% Overall Accuracy
+overallAccuracy = mean(accuracy, 'omitnan');
+% Plot with ±10% tolerance bands
 figure;
 hold on
 x = categorical(realTrackNames);
@@ -101,16 +96,16 @@ x = reordercats(x, realTrackNames);
 bar(x, realVmax, 'FaceAlpha', 0.3); % Real
 plot(x, matchedVcalc, 'ro-', 'LineWidth', 2); % Calculated
 % Plot tolerance bands
-upper = realVmax * 1.1;
-lower = realVmax * 0.9;
+upper =  matchedVcalc * 1.1;
+lower =  matchedVcalc* 0.9;
 plot(x, upper, 'k--');
 plot(x, lower, 'k--');
-ylabel('Top Speed [km/h]')
-legend('2024 Observed', 'Calculated', '+10% Band', '-10% Band', 'Location', 'best');
-title('Top Speed Comparison with ±10% Tolerance')
-grid on
-% Plotting
-
+annotationText = sprintf('Overall Accuracy: %.2f%%', overallAccuracy*100);
+ylabel('Top Speed [km/h]');
+title('Comparison of Observed vs. Calculated Top Speeds (±10% Band)');
+legend('Location', 'best');
+grid on;
+%% Analysis
 trackCat = categorical(data.Track);
 trackCat = reordercats(trackCat, data.Track);  % preserve original order
 figure;
