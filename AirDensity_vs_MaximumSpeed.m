@@ -62,6 +62,9 @@ v26e= solveVmax(P_tot26e,mass26_kg);
 data.Rho = rho;
 data.MdotAir = mdot_air;
 data.MdotFuel= mdot_fuel;
+data.PowerICE25_kW = P_ICE25/1e3;
+data.PowerICE26_kW = P_ICE26/1e3;
+data.PowerICE26e_kW = P_ICE26e/1e3;
 data.Power25_kW = P_tot25/1e3;
 data.Power26_kW = P_tot26/1e3;
 data.Power26e_kW= P_tot26e/1e3;
@@ -121,6 +124,12 @@ figure;
 tl = tiledlayout(2,2,'Padding','compact','TileSpacing','compact');
 nexttile;
 plot(trackCat,data.Rho);ylabel('Air Density[kg/m3]');
+nexttile;
+plot(trackCat,data.PowerICE25_kW,'DisplayName','2025');
+hold on
+plot(trackCat,data.PowerICE26_kW,'DisplayName','2026');
+plot(trackCat,data.PowerICE26e_kW,'DisplayName','2026 Ethanol');
+ylabel('ICE Power [kW]'); legend('Location','southwest');
 nexttile;
 plot(trackCat, data.Power25_kW, 'DisplayName','2025'); 
 hold on

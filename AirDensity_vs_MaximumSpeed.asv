@@ -108,8 +108,8 @@ grid on
 annotationText = sprintf('Overall Accuracy: %.2f%%', overallAccuracy * 100);
 yl = ylim;
 
-% Position the text in the middle-top of the plot
-text((n_+1)/2, yl(2) * 0.95, annotationText, ...
+% Position the text in the middle-bottom of the plot
+text((n_real+1)/2, yl(1) + 0.05*(yl(2)-yl(1)), annotationText, ...
      'HorizontalAlignment', 'center', ...
      'FontSize', 12, ...
      'FontWeight', 'bold', ...
@@ -121,6 +121,11 @@ figure;
 tl = tiledlayout(2,2,'Padding','compact','TileSpacing','compact');
 nexttile;
 plot(trackCat,data.Rho);ylabel('Air Density[kg/m3]');
+nexttile;
+plot(trackCat,data.P_ICE25,'DisplayName','2025');
+hold on
+plot(trackCat,data.P_ICE26,'DisplayName','2026');
+plot(trackCat,data.P_ICE26,'DisplayName','2026 Ethanol');
 nexttile;
 plot(trackCat, data.Power25_kW, 'DisplayName','2025'); 
 hold on
