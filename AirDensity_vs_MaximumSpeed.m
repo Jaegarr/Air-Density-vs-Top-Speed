@@ -41,7 +41,7 @@ end
 %% Rho and Air Mass Flow
 T_K = data.AvgTemp_C + 273.15;
 p_Pa = p0_Pa .* exp(-data.Elevation_m ./ Hscale_m);
-rho = p_Pa ./ (R_J_kgK .* T_K)
+rho = p_Pa ./ (R_J_kgK .* T_K);
 mdot_air = rho .* (pi/4*inlet_d_m^2) .* sqrt(gamma * R_J_kgK .* T_K);
 mdot_fuel = mdot_air ./ AFR_2025;
 mdot_fuel_e = mdot_air./AFR_2026;
@@ -136,3 +136,5 @@ plot(trackCat, data.Vmax26e_kph,'DisplayName','2026','LineStyle','--');
 ylabel('Top Speed [kph]'); legend('Location','southwest');
 PICE_ave_25= mean(data.PowerICE25_kW)
 PICE_ave_26= mean(data.PowerICE26e_kW)
+Pave_25= mean(data.Power25_kW)
+Pave_26= mean(data.Power26e_kW)
