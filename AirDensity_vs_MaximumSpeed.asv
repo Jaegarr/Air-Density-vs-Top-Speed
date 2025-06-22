@@ -18,8 +18,8 @@ gamma       = 1.4;     % Heat capacity ratio
 % Power-unit parameters
 Vd_m3       = 0.0016;
 RPM_max     = 12500;
-AFR_2025         = 14.13; %E10
-AFR_2026         = 8.95; %E100
+AFR_2025         = 14.13;
+AFR_2026         = 8.95;
 LHV_g_J_kg  = 42.6e6; %E10
 LHV_e_J_kg  = 26.8e6; %E100
 eta_comb    = 0.50;
@@ -41,31 +41,41 @@ end
 %% Rho and Air Mass Flow
 T_K = data.AvgTemp_C + 273.15;
 p_Pa = p0_Pa .* exp(-data.Elevation_m ./ Hscale_m);
-rho = p_Pa ./ (R_J_kgK .* T_K)
+rho = p_Pa ./ (R_J_kgK .* T_K);
+rho_boostlim = 4.8./ (R_J_kgK .* T_K);
 mdot_air = rho .* (pi/4*inlet_d_m^2) .* sqrt(gamma * R_J_kgK .* T_K);
+mdot_air_boostlim = rho_boostlim .* (pi/4*inlet_d_m^2) .* sqrt(gamma * R_J_kgK .* T_K);
 mdot_fuel = mdot_air ./ AFR_2025;
 mdot_fuel_e = mdot_air./AFR_2026;
+mdot_fuel_e_boostlim = mdot_air_boostlim./AFR_2026;
 %% Power calculations
 P_ICE25 = mdot_fuel .* LHV_g_J_kg .* eta_comb;
 P_ICE26e= mdot_fuel_e .* LHV_e_J_kg .* eta_comb;
+P_ICE26boostlim= mdot_fuel_e_boostlim .* LHV_e_J_kg .* eta_comb;
 P_tot25 = P_ICE25 + P_MGUK25_W .* eta_MGUK_2025;
 P_tot26e= P_ICE26e + P_MGUK26_W .* eta_MGUK_2026;
+P_tot26boostlim= P_ICE26boostlim + P_MGUK26_W .* eta_MGUK_2026;
 %% Top-speed solver
 solveVmax = @(Ptot,mass) arrayfun(@(rho_i,P_i) ...
     fzero(@(v) dragRR(v,rho_i,Cd,Af_m2,Cr,mass,g_m_s2) - P_i, 100), ...
     rho, Ptot);
 v25 = solveVmax(P_tot25, mass25_kg);
 v26e= solveVmax(P_tot26e,mass26_kg);
+v26boostlim= solveVmax(P_tot26boostlim,mass26_kg);
 %% Results
 data.Rho = rho;
 data.MdotAir = mdot_air;
+data.MdotAirBoost = mdot_fuel_e_boostlim;
 data.MdotFuel= mdot_fuel;
 data.PowerICE25_kW = P_ICE25/1e3;
 data.PowerICE26e_kW = P_ICE26e/1e3;
+data.PowerICE26boostlim_kW = P_ICE26boostlim/1e3;
 data.Power25_kW = P_tot25/1e3;
 data.Power26e_kW= P_tot26e/1e3;
+data.Power26boostlim_kW= P_tot26boostlim/1e3;
 data.Vmax25_kph = v25*3.6;
 data.Vmax26e_kph= v26e*3.6;
+data.Vmax26boostlim_kph= v26boostlim*3.6;
 %% Validation
 realTrackNames = {'Spa'; 'Monza'; 'Las Vegas'; 'Jeddah'; 'Austin';'Miami';'Mexico City';'Singapore'}; % Top speed data from 2024 season
 realVmax = [357.2; 353.5; 356.4; 341; 329.4;343.5;370;314.8]; % [km/h]
@@ -122,17 +132,17 @@ plot(trackCat,data.Rho);ylabel('Air Density[kg/m3]');
 nexttile;
 plot(trackCat,data.PowerICE25_kW,'DisplayName','2025');
 hold on
-plot(trackCat,data.PowerICE26e_kW,'DisplayName','2026','LineStyle','--');
+plot(trackCat,data.PowerICE26e_kW,'DisplayName','2026');
+plot(trackCat,data.PowerICE26boostlim_kW,'DisplayName','2026 Boost Limit','LineStyle','--');
 ylabel('ICE Power [kW]'); legend('Location','southwest');
 nexttile;
 plot(trackCat, data.Power25_kW, 'DisplayName','2025'); 
 hold on
-plot(trackCat, data.Power26e_kW,'DisplayName','2026','LineStyle','--');
+plot(trackCat, data.Power26e_kW,'DisplayName','2026');
 ylabel('Total Power [kW]'); legend('Location','southwest');
 nexttile;
 plot(trackCat, data.Vmax25_kph, 'DisplayName','2025'); 
 hold on
-plot(trackCat, data.Vmax26e_kph,'DisplayName','2026','LineStyle','--');
+plot(trackCat, data.Vmax26e_kph,'DisplayName','2026');
 ylabel('Top Speed [kph]'); legend('Location','southwest');
-PICE_ave_25= mean(data.PowerICE25_kW)
-PICE_ave_26= mean(data.PowerICE26e_kW)
+
